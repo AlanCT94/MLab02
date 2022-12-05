@@ -121,7 +121,7 @@ rmse <- c(rmse_training = rmse_training, rmse_test = rmse_test)
 Since our linear regression model was overfit; in this question Fat was modeled as a Lasso regression in which all Channels used as features. 
 
 This is the cost function that should be minimised in this case.
-$$J(\theta) = \sum_{i=1}^{n}{(\boldsymbol\theta^T\boldsymbol{x_i} - y_i)^2} + \lambda \sum_{j=1}^{p}{|\theta_i|}$$
+$$J(\theta) = \sum_{i=1}^{n}{(\boldsymbol\theta^T\boldsymbol{x_i} - y_i)^2} + \lambda \sum_{j=1}^{p}{|\theta_j|}$$
 where \
 $n$ is the number of observations \
 $p$ is the number of features \
@@ -224,7 +224,7 @@ par(mfrow=c(1,2))
 plot(l_cvfit)
 plot(l_cvfit, xlim = c(-4,-2) , ylim=c(0,20))
 ```
-
+The CV score (MSE) generally decreases with $\log \lambda$, with a steeper descent at $\log \lambda = 0$, until it reaches a minimum just before $\log \lambda = -3$, where the CV score stays at the same level for the remaining $\lambda$ sequence.
 
 Our optimal $\lambda$ value and optimal $\log \lambda$ value is calculated as below. 
 
@@ -245,12 +245,15 @@ coef_lambda_min <- coef(l_cvfit, s = "lambda.min")
 
 num_coef_lambda_min <- length(which(abs(coef_lambda_min)>0))-1
 ```
-Number of variables in the model with optimal $\lambda$:
+Summary of the result of the CV procedure, including number of variables in the model with optimal $\lambda$:
 ```{r}
 #cat("Number of variables that was chosen in the model with the optimal lambda:")
-(num_coef_lambda_min)
+#(num_coef_lambda_min)
+l_cvfit
 
 ```
+The number of variables in the model corresponding to the optimal $\lambda$ is 8. It can be noted
+that the CV MSE is around 14 for the optimal $\lambda$, which correspond to an RMSE of 3.8 (which is considerably lower than the RMSE for the test set for the linear model).
 
 If we compare $\log \lambda = -4$ and optimal $\log \lambda = -2.86$ the MSE CV values are not statistically different from each other as can be seen in the plot (the interval estimates are the same).Therefore, we cannot say that a model with the optimal $\lambda$ results in a model with statistically significantly better prediction than a model with $\log \lambda = -4$
 
